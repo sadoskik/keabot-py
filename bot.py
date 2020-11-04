@@ -93,7 +93,7 @@ async def on_message(message):
     #reddit gold commands
     if(command == "leaderboard"):
         try:
-            await leaderboard(message)
+            #await leaderboard(message)
         except Exception as err:
             PrintException()
         return
