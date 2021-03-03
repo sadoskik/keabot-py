@@ -7,6 +7,7 @@ import time
 import atexit
 import random
 import linecache
+import logging
 
 client = discord.Client()
 with open("config.json", "r") as f:
@@ -92,10 +93,7 @@ async def on_message(message):
 
     #reddit gold commands
     if(command == "leaderboard"):
-        try:
-            #await leaderboard(message)
-        except Exception as err:
-            PrintException()
+        leaderboard(message)
         return
     if(command == "score"):
         await getScore(message)
@@ -142,11 +140,16 @@ async def on_reaction_add(reaction, user):
     
     #new user handling
     if gifter not in scoreDB[server]:
+        scoreDB[server][gifter] = {}
         scoreDB[server][gifter]["score"] = 0
         scoreDB[server][gifter]["given"] = 0
+        scoreDB[server][gifter]["self"] = 0
+
     if receiver not in scoreDB[server]:
+        scoreDB[server][receiver] = {}
         scoreDB[server][receiver]["score"] = 0
         scoreDB[server][receiver]["given"] = 0
+        scoreDB[server][receiver]["self"] = 0
     #
 
     #check for selfish
@@ -162,6 +165,9 @@ async def on_reaction_add(reaction, user):
     scoreDB[server][receiver]["score"] += 1
     scoreDB[server][gifter]["given"] += 1
     #
+    #update name
+    scoreDB[server][gifter]["name"] = user.display_name
+
     await backup()
     print("%s gave %s gold" % (gifter, receiver))
 
@@ -216,7 +222,7 @@ async def leaderboard(message):
         print(userID)
         print(scoreDB[server][userID]["score"])
     for userID in sorted(scoreDB[server], key=sortFunc, reverse=True):
-        output = message.channel.guild.get_member(int(userID)).nick + ": " + scoreDB[server][userID]["score"]
+        output = scoreDB[server][userID]["name"]
         scoreboard.add_field(name = str(i)+".", value = output, inline=False)
         i += 1
         if i == 5:
