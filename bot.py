@@ -93,7 +93,7 @@ async def on_message(message):
 
     #reddit gold commands
     if(command == "leaderboard"):
-        leaderboard(message)
+        await leaderboard(message)
         return
     if(command == "score"):
         await getScore(message)
@@ -222,9 +222,10 @@ async def leaderboard(message):
         print(userID)
         print(scoreDB[server][userID]["score"])
     for userID in sorted(scoreDB[server], key=sortFunc, reverse=True):
-        output = scoreDB[server][userID]["name"]
-        scoreboard.add_field(name = str(i)+".", value = output, inline=False)
-        i += 1
+        if "name" in scoreDB[server][userID]:
+            output = scoreDB[server][userID]["name"] + ": " + str(scoreDB[server][userID]["score"])
+            scoreboard.add_field(name = str(i)+".", value = output, inline=False)
+            i += 1
         if i == 5:
             break
     await message.channel.send(embed = scoreboard)
