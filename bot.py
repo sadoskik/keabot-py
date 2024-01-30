@@ -10,10 +10,9 @@ import linecache
 import logging
 
 client = discord.Client()
-with open("config.json", "r") as f:
+with open("token.json", "r") as f:
     configs = json.load(f)
-    token = configs["token"]
-    prefix = configs["prefix"]
+    discordToken = configs["discord"]
 
 
 
@@ -319,4 +318,4 @@ async def removeClown(message, args):
 
 
 
-client.run(token)
+client.run(discordToken)
