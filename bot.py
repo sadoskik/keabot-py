@@ -9,7 +9,9 @@ import random
 import linecache
 import logging
 
-client = discord.Client()
+intents = discord.Intents.default()
+intents.message_content = True
+client = discord.Client(intents=intents)
 with open("token.json", "r") as f:
     configs = json.load(f)
     discordToken = configs["discord"]
@@ -35,7 +37,7 @@ else:
 
 clowns = {}
 
-files = os.listdir(CURR_DIR + "/Images/")
+files = os.listdir(CURR_DIR + "Data/Images/")
 for f in files:
     clowns[f] = True
 with open("clowns.json", "w") as f:
@@ -252,7 +254,7 @@ async def addimage(message, args):
     i = 0
     for image in message.attachments:
         extension = image.filename[-4:]
-        path = CURR_DIR + "/Images/" + clownName + "/" + clownName + fileNonce + str(i) + extension
+        path = CURR_DIR + "Data/Images/" + clownName + "/" + clownName + fileNonce + str(i) + extension
         await image.save(path)
         await message.channel.send("Image saved")
         i += 1
@@ -268,7 +270,7 @@ async def delete(message, args):
 async def postImage(message, name):
     server = str(message.guild.id) 
     
-    path = CURR_DIR + "/Images/" + name
+    path = CURR_DIR + "Data/Images/" + name
     if os.access(path, os.F_OK):
         files = os.listdir(path)
         print(files)
@@ -286,10 +288,10 @@ async def postImage(message, name):
 
 async def addClown(message, args):
     server = str(message.guild.id) 
-    if os.access("Images/" + args[0], os.F_OK):
+    if os.access("Data/Images/" + args[0], os.F_OK):
         await message.channel.send("This clown already exists")
     else:
-        os.mkdir(CURR_DIR + "/Images/" + args[0])
+        os.mkdir(CURR_DIR + "Data/Images/" + args[0])
         print("Created directory for clown " + args[0])
         await message.channel.send("Clown created: " + args[0])
         clowns[args[0]] = True
@@ -301,7 +303,7 @@ async def listClowns(message):
     print("..clowns called")
     scoreboard = discord.Embed(title="Scoreboard", color=discord.Color.from_rgb(255, 0, 0))
     
-    path = CURR_DIR + "/Images"
+    path = CURR_DIR + "Data/Images"
     files = os.listdir(path)
     i = 1
     for f in files:
@@ -314,7 +316,6 @@ async def listClowns(message):
 async def removeClown(message, args):
     server = str(message.guild.id) 
     return
-
 
 
 
