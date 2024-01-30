@@ -311,8 +311,8 @@ async def delete(message: discord.Message, args):
         return
     try:
         os.remove(lastSentFile)
-    except WinError as e:
-        logger.error("Delete image error.", exc_info=e)
+    except:
+        logger.error("Delete image error.")
         await message.reply("Failed to delete")
         return
     logger.info("Deleted %s", lastSentFile)
