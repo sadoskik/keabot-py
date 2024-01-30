@@ -1,4 +1,3 @@
-from ctypes import WinError
 import re
 import discord
 import logging
