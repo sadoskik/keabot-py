@@ -156,9 +156,6 @@ async def on_message(message: discord.Message):
     #
     
 
-@client.event
-async def on_message_delete(message):
-    await message.channel.send(":eyes:")
 
 @client.event
 async def on_reaction_add(reaction, user):
