@@ -204,7 +204,7 @@ async def on_reaction_add(reaction, user):
 
 @client.event
 async def on_reaction_remove(reaction, user):
-    if reaction.custom_emoji and reaction.emoji.name != "gold":
+    if reaction.is_custom_emoji() and reaction.emoji.name != "gold":
         logger.debug("Not gold emoji")
         return
     receiver = str(reaction.message.author.id )
