@@ -167,7 +167,9 @@ async def on_reaction_add(reaction, user):
     gifter = str(user.id) 
     
     logger.info("Gold reaction event. Gifter: %s, Receiver: %s, Server: %s", gifter, receiver, server)
-    
+    if server not in scoreDB:
+        scoreDB[server] = {}
+        logger.info("Created server object in scoreDB for %s", server)
     #new user handling
     if gifter not in scoreDB[server]:
         scoreDB[server][gifter] = {}
@@ -209,16 +211,21 @@ async def on_reaction_remove(reaction, user):
     server = str(reaction.message.guild.id )
     taker = str(user.id )
     
+    if server not in scoreDB:
+        scoreDB[server] = {}
+        logger.info("Add new server to scoreDB for %s", server)
     
     #new user handling
     if taker not in scoreDB[server]:
         scoreDB[server][taker]["score"] = 0
         scoreDB[server][taker]["given"] = 0
         scoreDB[server][taker]["self"] = 0
+        return
     if receiver not in scoreDB[server]:
         scoreDB[server][receiver]["score"] = 0
         scoreDB[server][receiver]["given"] = 0
         scoreDB[server][receiver]["self"] = 0
+        return
     #
 
     #check for selfish
