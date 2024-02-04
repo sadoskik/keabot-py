@@ -275,7 +275,7 @@ async def getScore(message):
 async def addimage(message: discord.Message, args):
     server = str(message.guild.id) 
     if len(args) == 0:
-        logger.info("No argument was given")
+        logger.info("No argument was given for addimage")
         await message.reply("No clown given, bozo")
         return
     clownName = args[0]
@@ -301,9 +301,9 @@ async def addimage(message: discord.Message, args):
             clownName,
             clownName + fileNonce + str(i) + extension)
         await image.save(path)
-        await message.reply("Image(s) saved")
+        
         i += 1
-
+    await message.reply("%s image(s) saved." % str(i))
     return
 
 async def delete(message: discord.Message, args):
