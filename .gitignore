@@ -4,3 +4,4 @@ logs/
 .vs/
 clownScore.json
 clowns.json
+*.bak
