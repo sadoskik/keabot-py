@@ -15,13 +15,15 @@ from os.path import join, split
 ROOT_DIR = split(__file__)[0]
 
 parser = argparse.ArgumentParser("Keabot", "Run to start the discord bot Keabot. Tracks 'reddit gold', allows image upload and random reposting.")
-parser.add_argument("-t", dest="tokenLoc", default=join(ROOT_DIR, "./token.json"),  required=False)
+parser.add_argument("-t", dest="tokenLoc", default=join(ROOT_DIR, "./token"),  required=False)
 parser.add_argument("-d", dest="dataFolder", default=join(ROOT_DIR, "./Data/"), required=False)
+parser.add_argument("-c", dest="configLoc", default=join(ROOT_DIR, "./config.json"), required=False)
 
 args = parser.parse_args()
 DATA_DIR = os.path.abspath(args.dataFolder)
 TOKEN_LOC = os.path.abspath(args.tokenLoc)
 IMAGES_DIR = join(DATA_DIR, "Images")
+CONFIG_LOC = os.path.abspath(args.configLoc)
 prefix = ".."
 
 logger = logging.getLogger(__name__)
@@ -39,9 +41,10 @@ fileHandler.setFormatter(formatter)
 logger.addHandler(fileHandler)
 
 with open(TOKEN_LOC, "r") as f:
-    configs = json.load(f)
-    discordToken = configs["discord"]
+    discordToken = f.read()
 
+with open(CONFIG_LOC, "r") as f:
+    configs = json.load(f)
 intents = discord.Intents.default()
 intents.message_content = True
 client = discord.Client(intents=intents)
