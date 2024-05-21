@@ -15,16 +15,17 @@ from os.path import join, split
 ROOT_DIR = split(__file__)[0]
 
 parser = argparse.ArgumentParser("Keabot", "Run to start the discord bot Keabot. Tracks 'reddit gold', allows image upload and random reposting.")
-parser.add_argument("-t", dest="tokenLoc", default=join(ROOT_DIR, "./token"),  required=False)
+parser.add_argument("-t", dest="token_file", required=False)
 parser.add_argument("-d", dest="dataFolder", default=join(ROOT_DIR, "./Data/"), required=False)
 parser.add_argument("-c", dest="configLoc", default=join(ROOT_DIR, "./config.json"), required=False)
 
 args = parser.parse_args()
+TOKEN_FILE = args.token_file
 DATA_DIR = os.path.abspath(args.dataFolder)
-TOKEN_LOC = os.path.abspath(args.tokenLoc)
-IMAGES_DIR = join(DATA_DIR, "Images")
+IMAGES_DIR = join(DATA_DIR, "images")
 CONFIG_LOC = os.path.abspath(args.configLoc)
 prefix = ".."
+TOKEN = None
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -40,15 +41,27 @@ fileHandler = logging.handlers.RotatingFileHandler(
 fileHandler.setFormatter(formatter)
 logger.addHandler(fileHandler)
 
-with open(TOKEN_LOC, "r") as f:
-    discordToken = f.read()
-
 with open(CONFIG_LOC, "r") as f:
     configs = json.load(f)
 intents = discord.Intents.default()
 intents.message_content = True
 client = discord.Client(intents=intents)
+if TOKEN_FILE:
+    logger.info("Opening token file %s", TOKEN_FILE)
+    try:
+        with open(TOKEN_FILE, "r", encoding="utf-8") as fp:
+            TOKEN = fp.read()
+    except:
+        logger.critical("Failed to open file: %s", TOKEN_FILE)
 
+if not TOKEN:
+    TOKEN = os.environ.get("DISCORD_TOKEN")
+
+if not TOKEN:
+    logger.error("No token specified. Provide on command line or in environment")
+    sys.exit(1)
+else:
+    logger.info("Token is %s", TOKEN)
 #image function support
 lastSentFile = ""
 
@@ -381,4 +394,4 @@ async def removeClown(message, args):
 
 
 
-client.run(discordToken)
+client.run(TOKEN)
