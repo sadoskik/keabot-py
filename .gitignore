@@ -1,2 +1,8 @@
 token.json
+token
 Data/
+logs/
+.vs/
+clownScore.json
+clowns.json
+*.bak
