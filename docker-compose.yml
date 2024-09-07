@@ -1,0 +1,14 @@
+services:
+  bot:
+    build: .
+    image: keabot
+    container_name: keabot_live
+    restart: on-failure:5
+    volumes:
+      - "./data:/app/data"
+    secrets:
+      - source: discord_token
+        target: /secret/discord_token
+secrets:
+  discord_token:
+    file: ./discord_token.secret

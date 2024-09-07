@@ -1,6 +1,8 @@
-FROM python:3.10
+FROM python:3.12
 WORKDIR /app
-COPY . .
+COPY src src
+COPY requirements.txt .
+COPY config.json .
 RUN apt update && apt upgrade -y
 RUN pip install -r requirements.txt
-CMD ["python", "bot.py", "-t", "/secret/token"]
+CMD ["python", "src/start_bot.py"]

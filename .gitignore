@@ -1,8 +1,5 @@
-token.json
-token
-Data/
-logs/
+*.secret
+data/
 .vs/
-clownScore.json
-clowns.json
-*.bak
+config.json
+__pycache__
