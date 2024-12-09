@@ -1,3 +1,4 @@
-token
-Data/
+*.secret
+data/
 .git/
+__pycache__
